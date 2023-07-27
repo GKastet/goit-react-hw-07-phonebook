@@ -11,14 +11,12 @@ function fetchFulfilled(state, { payload }) {
   state.contacts.isLoading = false;
   state.contacts.items = payload;
 }
-function addFulfilled(state, { payload }) {
-  console.log(payload);
+function addFulfilled(state, { payload }) {  
   state.contacts.isLoading = false;
   state.contacts.items.push(payload);
 }
 
-function deleteFulfilled(state, { payload }) {
-  console.log(payload);
+function deleteFulfilled(state, { payload }) {  
   state.contacts.isLoading = false;
   state.contacts.items = state.contacts.items.filter(
     contact => contact.id !== payload.id
@@ -44,16 +42,12 @@ const contactsSlice = createSlice({
     },
   },
   extraReducers: builder =>
-    builder
-      .addCase(fetchContactThunk.pending, handlePending)
-      .addCase(fetchContactThunk.fulfilled, fetchFulfilled)
-      .addCase(fetchContactThunk.rejected, handleRejected)
-      .addCase(addContactThunk.pending, handlePending)
-      .addCase(addContactThunk.fulfilled, addFulfilled)
-      .addCase(addContactThunk.rejected, handleRejected)
-      .addCase(deleteContactThunk.pending, handlePending)
-      .addCase(deleteContactThunk.fulfilled, deleteFulfilled)
-      .addCase(deleteContactThunk.rejected, handleRejected)
+    builder      
+      .addCase(fetchContactThunk.fulfilled, fetchFulfilled)      
+      .addCase(addContactThunk.fulfilled, addFulfilled)      
+      .addCase(deleteContactThunk.fulfilled, deleteFulfilled)      
+      .addMatcher(action => action.type.endsWith('/pending'), handlePending)
+      .addMatcher(action => action.type.endsWith('/rejected'), handleRejected)
 });
 
 export const { filterContact } = contactsSlice.actions;
