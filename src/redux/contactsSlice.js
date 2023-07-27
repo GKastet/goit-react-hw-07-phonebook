@@ -1,18 +1,13 @@
 import initialState from './initialState';
 import { createSlice } from '@reduxjs/toolkit';
-import {
-  fetchContactThunk,
-  addContactThunk,
-  deleteContactThunk,
-} from './contactsThunk';
+import { fetchContactThunk, addContactThunk, deleteContactThunk } from './contactsThunk';
 
 function handlePending(state) {
   state.contacts.isLoading = true;
   state.contacts.error = null;
 }
 
-function fetchFulfilled(state, { payload }) {
-  console.log(payload);
+function fetchFulfilled(state, { payload }) {  
   state.contacts.isLoading = false;
   state.contacts.items = payload;
 }
@@ -43,26 +38,7 @@ const contactsSlice = createSlice({
   name: 'contacts',
   initialState: initialState,
 
-  reducers: {
-    // addContact: {
-    //   reducer(state, { payload }) {
-    //     state.contacts.push(payload);
-    //   },
-    //   prepare: contact => {
-    //     return {
-    //       payload: {
-    //         id: nanoid(),
-    //         name: contact.name,
-    //         number: contact.number,
-    //       },
-    //     };
-    //   },
-    // },
-    // deleteContact(state, action) {
-    //   state.contacts = state.contacts.filter(
-    //     contact => contact.id !== action.payload
-    //   );
-    // },
+  reducers: {   
     filterContact(state, { payload }) {
       state.filter = payload;
     },

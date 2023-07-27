@@ -5,27 +5,21 @@ import { Section } from './ContainerStyled';
 import ContactForm from './ContactForm/ContactForm';
 import Filter from './Filter/Filter';
 import Contacts from './Contacts/Contacts';
-//import { postApiContact } from 'Api/api';
 import { addContactThunk, deleteContactThunk, fetchContactThunk } from 'redux/contactsThunk';
-//import { getApiContact } from 'Api/api';
+import { selectError, selectFiltered, selectIsLoading, selectItems } from 'redux/selectors';
+import Loader from './Loader/Loader';
 
 export default function App() {
-  const {items} = useSelector(state => state.contacts);
-  const filtered = useSelector(state => state.contacts.filter);
+   const items = useSelector(selectItems)
+   const isLoading = useSelector(selectIsLoading)
+   const error = useSelector(selectError)
+   const filtered = useSelector(selectFiltered)
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    
-
       dispatch(fetchContactThunk());
   }, [dispatch]);
-
-
-  // useEffect(() => {
-  //   if(!items)return;      
-  //    postApiContact(items)     
-  // }, [items]);
 
 
   const formAddContact = contactData => {
@@ -44,21 +38,20 @@ export default function App() {
     dispatch(filterContact(evt.currentTarget.value));
   };
 
-  // const filteredContact = items?.filter(contact =>
-  //   contact.name.toLowerCase().includes(filtered.toLowerCase())
-  // );
-
-
+  const filteredContact = items?.filter(contact =>
+    contact.name.toLowerCase().includes(filtered.toLowerCase())
+  );
 
   return (
     <Section>
       <h1>Phonebook</h1>
-
       <ContactForm formAddContact={formAddContact} contactsArr={items} />
       <h2>Contacts</h2>
       <Filter value={filtered} handleOnChangeFilter={handleOnChangeFilter} />
+      {isLoading && <Loader />}
+      {error && <>Oops... Error: {error}</>}
       <Contacts
-        filteredContact={items}
+        filteredContact={filteredContact}
         onRemoveContact={contactId => {
           dispatch(deleteContactThunk(contactId));
         }}
